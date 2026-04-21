@@ -13,6 +13,13 @@ use App\Http\Controllers\AuthController;
 // })->middleware('auth:sanctum');
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::get('/test', function () {
+    return response()->json([
+        'ok' => true,
+        'message' => 'API running and successful'
+    ]);
+});
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
