@@ -19,4 +19,5 @@ if (
 }
 
 // Semua request lain masuk ke Laravel
-require $publicPath . '/index.php';
+// require $publicPath . '/index.php';
+require __DIR__ . '/../public/index.php';

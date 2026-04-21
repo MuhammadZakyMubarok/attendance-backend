@@ -4,7 +4,7 @@
   "outputDirectory": "public",
   "functions": {
     "api/index.php": {
-      "runtime": "vercel-php@0.9.0",
+      "runtime": "vercel-community/php@0.4.3",
       "memory": 1024,
       "maxDuration": 30
     }

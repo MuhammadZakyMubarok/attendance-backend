@@ -57,9 +57,7 @@
             "php artisan route:clear",
             "php artisan view:clear",
             "npm ci",
-            "npm run build",
-            "php artisan config:cache",
-            "php artisan route:cache"
+            "npm run build"
         ]
     },
     "extra": {
