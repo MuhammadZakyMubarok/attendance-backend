@@ -4,7 +4,6 @@ $publicPath = realpath(__DIR__ . '/../public');
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/');
 $file = realpath($publicPath . $uri);
 
-// Layani file statis dari public/ kalau ada
 if (
     $uri !== '/' &&
     $file &&
@@ -18,6 +17,10 @@ if (
     exit;
 }
 
-// Semua request lain masuk ke Laravel
-// require $publicPath . '/index.php';
-require __DIR__ . '/../public/index.php';
+// Normalisasi agar Laravel tidak menganggap aplikasi berjalan di subpath /api
+$_SERVER['SCRIPT_FILENAME'] = $publicPath . '/index.php';
+$_SERVER['SCRIPT_NAME'] = '/index.php';
+$_SERVER['PHP_SELF'] = '/index.php';
+$_SERVER['DOCUMENT_ROOT'] = $publicPath;
+
+require $publicPath . '/index.php';
