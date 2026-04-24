@@ -12,6 +12,7 @@ use App\Http\Controllers\AuthController;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/check-token', [AuthController::class, 'checkSessionToken']);
 
 Route::get('/test', function () {
     return response()->json([

@@ -8,6 +8,7 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -61,6 +62,52 @@ class AuthController extends Controller
             'image_url' => $employee->image_url,
             'unique_id' => $employee->unique_id,
             'email' => $employee->email,
+        ], 200);
+    }
+
+    public function checkSessionToken(Request $request)
+    {
+        $validated = $request->validate([
+            'token' => ['required', 'string'],
+        ]);
+
+        $plainTextToken = $validated['token'];
+
+        $accessToken = PersonalAccessToken::findToken($plainTextToken);
+
+        if (! $accessToken) {
+            return response()->json([
+                'message' => 'Token tidak valid',
+            ], 401);
+        }
+
+        $employee = $accessToken->tokenable;
+
+        if (! $employee instanceof Employee) {
+            return response()->json([
+                'message' => 'Token tidak valid',
+            ], 401);
+        }
+
+        if ($accessToken->expires_at && $accessToken->expires_at->isPast()) {
+            return response()->json([
+                'message' => 'Token sudah expired',
+            ], 401);
+        }
+
+        $accessToken->forceFill([
+            'last_used_at' => now(),
+        ])->save();
+
+        return response()->json([
+            'message' => 'Berhasil melakukan login',
+            'name' => $employee->name,
+            'phone' => $employee->phone,
+            'role' => $employee->role,
+            'position' => $employee->position,
+            'department' => $employee->department,
+            'image_url' => $employee->image_url,
+            'unique_id' => $employee->unique_id,
         ], 200);
     }
 
