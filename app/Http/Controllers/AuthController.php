@@ -35,6 +35,7 @@ class AuthController extends Controller
             ->plainTextToken;
 
         return response()->json([
+            'isSuccess' => true,
             'message' => 'berhasil melakukan login',
             'token' => $token,
             'name' => $employee->name,
@@ -53,6 +54,7 @@ class AuthController extends Controller
         $employee = $request->user();
 
         return response()->json([
+            'isSuccess' => true,
             'message' => 'data employee berhasil diambil',
             'name' => $employee->name,
             'phone' => $employee->phone,
@@ -87,6 +89,7 @@ class AuthController extends Controller
         }
 
         return response()->json([
+            'isSuccess' => true,
             'message' => 'Berhasil melakukan login',
             'name' => $employee->name,
             'phone' => $employee->phone,
@@ -110,6 +113,7 @@ class AuthController extends Controller
         }
 
         return response()->json([
+            'isSuccess' => true,
             'message' => 'berhasil logout',
         ], 200);
     }
