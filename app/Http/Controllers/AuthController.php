@@ -67,37 +67,24 @@ class AuthController extends Controller
 
     public function checkSessionToken(Request $request)
     {
-        $validated = $request->validate([
-            'token' => ['required', 'string'],
-        ]);
+        /** @var \App\Models\Employee|null $employee */
+        $employee = $request->user();
 
-        $plainTextToken = $validated['token'];
-
-        $accessToken = PersonalAccessToken::findToken($plainTextToken);
-
-        if (! $accessToken) {
+        if (! $employee) {
             return response()->json([
                 'message' => 'Token tidak valid',
             ], 401);
         }
 
-        $employee = $accessToken->tokenable;
+        $currentToken = $employee->currentAccessToken();
 
-        if (! $employee instanceof Employee) {
-            return response()->json([
-                'message' => 'Token tidak valid',
-            ], 401);
+        if ($currentToken && isset($currentToken->id)) {
+            $employee->tokens()
+                ->whereKey($currentToken->id)
+                ->update([
+                    'last_used_at' => now(),
+                ]);
         }
-
-        if ($accessToken->expires_at && $accessToken->expires_at->isPast()) {
-            return response()->json([
-                'message' => 'Token sudah expired',
-            ], 401);
-        }
-
-        $accessToken->forceFill([
-            'last_used_at' => now(),
-        ])->save();
 
         return response()->json([
             'message' => 'Berhasil melakukan login',
