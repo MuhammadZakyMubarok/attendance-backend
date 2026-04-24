@@ -12,7 +12,6 @@ use App\Http\Controllers\AuthController;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/check-token', [AuthController::class, 'checkSessionToken']);
 
 Route::get('/test', function () {
     return response()->json([
@@ -23,6 +22,7 @@ Route::get('/test', function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/check-token', [AuthController::class, 'checkSessionToken']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/employee/fetch-data', [EmployeeController::class, 'index']);
 
