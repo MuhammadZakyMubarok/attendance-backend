@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use App\Models\Leaving;
 
 class LeavingController extends Controller
@@ -43,14 +44,12 @@ class LeavingController extends Controller
             Leaving::create($validated);
 
             return response()->json([
-                'isSuccess' => true,
                 'message' => 'Berhasil submit form Leaving'
-            ], 201);
-        } catch(\Exception $e){
+            ], 200);
+        } catch(QueryException $e){
             return response()->json([
-                'isSuccess' => false,
-                'message' => $e
-            ], 201);
+                'message' => $e->errorInfo
+            ], 500);
         };
     }
 

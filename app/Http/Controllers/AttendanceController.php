@@ -34,16 +34,11 @@ class AttendanceController extends Controller
             Attendance::create($validated);
 
             return response()->json([
-                'isSuccess' => true,
                 'message' => 'Berhasil melakukan absensi masuk'
-            ], 201);
+            ], 200);
 
         } catch (QueryException $e) {
-            //untuk $e
-            // Log::error($e);
-            //Message tidak boleh langsung $e pada tahap develop boleh
             return response()->json([
-                'isSuccess' => false,
                 'message' => $e->errorInfo,
             ], 500);
         }
@@ -62,9 +57,8 @@ class AttendanceController extends Controller
 
             if(!$attendance){
                 return response()->json([
-                    'isSuccess' => false,
                     'message' => 'Terjadi kesalahan tidak berhasil menemukan data checkIn absensi'
-                ]);
+                ], 401);
             }
             $attendance->update([
                 'time_out' => $validated['time_out'],
@@ -72,17 +66,12 @@ class AttendanceController extends Controller
             ]);
 
             return response()->json([
-                'isSuccess' => true,
                 'message' => 'Berhasil melakukan absensi keluar'
-            ], 201);
+            ], 200);
 
-        } catch (\Exception $e) {
-            //untuk $e
-            // Log::error($e);
-            //Message tidak boleh langsung $e karena message ini dikirim ke user pada tahap develop boleh
+        } catch (QueryException $e) {
             return response()->json([
-                'isSuccess' => false,
-                'message' => $e
+                'message' => $e->errorInfo
             ], 500);
         }
     }
@@ -96,19 +85,52 @@ class AttendanceController extends Controller
             $attendance = Attendance::where('user_id', $validated['user_id'])->where('date', $validated['date'])->first();
             if($attendance){
                 return response()->json([
-                    'isSuccess'=> true,
-                ]);
+                    'message'=> 'Anda belum melakukan absen keluar pada hari ini',
+                ], 200);
             } else{
                 return response()->json([
-                    'isSuccess'=> false,
-                ]);
+                    'message'=> 'Anda belum melakukan absen masuk pada hari ini',
+                ], 200);
             }
-        } catch(\Exception $e){
+        } catch(QueryException $e){
             return response()->json([
-                'isSuccess'=> false,
-                'message'=> $e
-            ]);
+                'message'=> $e->errorInfo
+            ], 500);
         };
+    }
+
+    public function fetchData(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+
+        try {
+            $authUser = $request->user();
+
+            if ((int) $authUser->id !== (int) $validated['user_id']) {
+                return response()->json([
+                    'message' => 'Anda tidak memiliki akses ke data ini',
+                ], 403);
+            }
+
+            $attendance = Attendance::where('user_id', $validated['user_id'])->get();
+
+            if ($attendance->isEmpty()) {
+                return response()->json([
+                    [],
+                ], 404);
+            }
+
+            return response()->json([
+                $attendance,
+            ], 200);
+
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => $e->errorInfo,
+            ], 500);
+        }
     }
 
     /**

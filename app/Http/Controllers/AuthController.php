@@ -7,8 +7,7 @@ use App\Models\Employee;
 // use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
-use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Database\QueryException;
 
 class AuthController extends Controller
 {
@@ -20,32 +19,37 @@ class AuthController extends Controller
             'device_name' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $employee = Employee::query()
+        try {
+            $employee = Employee::query()
             ->where('email', $validated['email'])
             ->first();
 
-        if (! $employee || ! Hash::check($validated['password'], $employee->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Email atau password salah.'],
-            ]);
+            if (! $employee || ! Hash::check($validated['password'], $employee->password)) {
+                return response()->json([
+                    'message' => 'Email atau password salah.',
+                ]);
+            }
+
+            $token = $employee
+                ->createToken($validated['device_name'] ?? 'mobile')
+                ->plainTextToken;
+
+            return response()->json([
+                'message' => 'berhasil melakukan login',
+                'token' => $token,
+                'name' => $employee->name,
+                'phone' => $employee->phone,
+                'role' => $employee->role,
+                'position' => $employee->position,
+                'department' => $employee->department,
+                'image_url' => $employee->image_url,
+                'unique_id' => $employee->unique_id,
+            ], 200);
+        } catch(QueryException $e){
+            return response()->json([
+                'message' => $e->errorInfo,
+            ], 500);
         }
-
-        $token = $employee
-            ->createToken($validated['device_name'] ?? 'mobile')
-            ->plainTextToken;
-
-        return response()->json([
-            'isSuccess' => true,
-            'message' => 'berhasil melakukan login',
-            'token' => $token,
-            'name' => $employee->name,
-            'phone' => $employee->phone,
-            'role' => $employee->role,
-            'position' => $employee->position,
-            'department' => $employee->department,
-            'image_url' => $employee->image_url,
-            'unique_id' => $employee->unique_id,
-        ], 200);
     }
 
     public function me(Request $request) 
@@ -78,27 +82,32 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $currentToken = $employee->currentAccessToken();
+        try{
+            $currentToken = $employee->currentAccessToken();
 
-        if ($currentToken && isset($currentToken->id)) {
-            $employee->tokens()
-                ->whereKey($currentToken->id)
-                ->update([
-                    'last_used_at' => now(),
-                ]);
+            if ($currentToken && isset($currentToken->id)) {
+                $employee->tokens()
+                    ->whereKey($currentToken->id)
+                    ->update([
+                        'last_used_at' => now(),
+                    ]);
+            }
+
+            return response()->json([
+                'message' => 'Berhasil melakukan login',
+                'name' => $employee->name,
+                'phone' => $employee->phone,
+                'role' => $employee->role,
+                'position' => $employee->position,
+                'department' => $employee->department,
+                'image_url' => $employee->image_url,
+                'unique_id' => $employee->unique_id,
+            ], 200);
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => $e->errorInfo,
+            ], 500);
         }
-
-        return response()->json([
-            'isSuccess' => true,
-            'message' => 'Berhasil melakukan login',
-            'name' => $employee->name,
-            'phone' => $employee->phone,
-            'role' => $employee->role,
-            'position' => $employee->position,
-            'department' => $employee->department,
-            'image_url' => $employee->image_url,
-            'unique_id' => $employee->unique_id,
-        ], 200);
     }
 
     public function logout(Request $request)
@@ -106,15 +115,27 @@ class AuthController extends Controller
         /** @var \App\Models\Employee $employee */
         $employee = $request->user();
 
-        $currentToken = $employee->currentAccessToken();
-
-        if ($currentToken) {
-            $employee->tokens()->whereKey($currentToken->id)->delete();
+        if (! $employee) {
+            return response()->json([
+                'message' => 'Token tidak valid',
+            ], 401);
         }
 
-        return response()->json([
-            'isSuccess' => true,
-            'message' => 'berhasil logout',
-        ], 200);
+        try{
+            $currentToken = $employee->currentAccessToken();
+
+            if ($currentToken) {
+                $employee->tokens()->whereKey($currentToken->id)->delete();
+            }
+
+            return response()->json([
+                'isSuccess' => true,
+                'message' => 'berhasil logout',
+            ], 200);
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => $e->errorInfo,
+            ], 500);
+        }
     }
 }

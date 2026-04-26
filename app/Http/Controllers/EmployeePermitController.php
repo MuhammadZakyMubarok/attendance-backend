@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\EmployeePermit;
+use Illuminate\Database\QueryException;
 
 class EmployeePermitController extends Controller
 {
@@ -11,6 +12,7 @@ class EmployeePermitController extends Controller
         $employeePermit = EmployeePermit::all();
         return response()->json($employeePermit, 200);
     }
+
     public function store(Request $request){
         $validated = $request->validate([
             'dt_permit' => 'required|string',
@@ -28,13 +30,11 @@ class EmployeePermitController extends Controller
         try{
             EmployeePermit::create($validated);
             return response()->json([
-                'isSuccess' => true,
                 'message' => 'Berhasil submit form Employee Permit'
-            ], 201);
-        }catch(\Exception $e){
+            ], 200);
+        }catch(QueryException $e){
             return response()->json([
-                'isSuccess' => false,
-                "message" => $e
+                'message' => $e->errorInfo,
             ], 500);
         }
     }
