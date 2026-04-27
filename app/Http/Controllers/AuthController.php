@@ -30,6 +30,12 @@ class AuthController extends Controller
                 ]);
             }
 
+            if ($employee->tokens()->exists()) {
+                return response()->json([
+                    'message' => 'Akun ini sudah login di perangkat lain. Silakan logout terlebih dahulu.',
+                ], 409);
+            }
+
             $token = $employee
                 ->createToken($validated['device_name'] ?? 'mobile')
                 ->plainTextToken;
