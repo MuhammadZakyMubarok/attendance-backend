@@ -21,7 +21,6 @@ Route::get('/test', function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/me', [AuthController::class, 'me']);
     Route::post('/check-token', [AuthController::class, 'checkSessionToken']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/employee/fetch-data', [EmployeeController::class, 'index']);
