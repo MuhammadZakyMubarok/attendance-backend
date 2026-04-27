@@ -34,20 +34,9 @@ class AuthController extends Controller
                 ->createToken($validated['device_name'] ?? 'mobile')
                 ->plainTextToken;
 
-            // return response()->json([
-            //     'message' => 'berhasil melakukan login',
-            //     'token' => $token,
-            //     'name' => $employee->name,
-            //     'phone' => $employee->phone,
-            //     'role' => $employee->role,
-            //     'position' => $employee->position,
-            //     'department' => $employee->department,
-            //     'image_url' => $employee->image_url,
-            //     'unique_id' => $employee->unique_id,
-            // ], 200);
             return response()->json([
-                'message' => 'berhasil melakukan login',
-                $employee
+                'token' => $token,
+                ...$employee->toArray(),
             ], 200);
         } catch(QueryException $e){
             return response()->json([
@@ -61,22 +50,7 @@ class AuthController extends Controller
         /** @var \App\Models\Employee $employee */
         $employee = $request->user();
 
-        // return response()->json([
-        //     'isSuccess' => true,
-        //     'message' => 'data employee berhasil diambil',
-        //     'name' => $employee->name,
-        //     'phone' => $employee->phone,
-        //     'role' => $employee->role,
-        //     'position' => $employee->position,
-        //     'department' => $employee->department,
-        //     'image_url' => $employee->image_url,
-        //     'unique_id' => $employee->unique_id,
-        //     'email' => $employee->email,
-        // ], 200);
-        return response()->json([
-            'message' => 'berhasil melakukan login',
-            $employee
-        ], 200);
+        return response()->json($employee, 200);
     }
 
     public function checkSessionToken(Request $request)
@@ -101,20 +75,7 @@ class AuthController extends Controller
                     ]);
             }
 
-            // return response()->json([
-            //     'message' => 'Berhasil melakukan login',
-            //     'name' => $employee->name,
-            //     'phone' => $employee->phone,
-            //     'role' => $employee->role,
-            //     'position' => $employee->position,
-            //     'department' => $employee->department,
-            //     'image_url' => $employee->image_url,
-            //     'unique_id' => $employee->unique_id,
-            // ], 200);
-            return response()->json([
-                'message' => 'berhasil melakukan login',
-                $employee
-            ], 200);
+            return response()->json($employee, 200);
         } catch (QueryException $e) {
             return response()->json([
                 'message' => $e->errorInfo,
