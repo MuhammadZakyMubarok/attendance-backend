@@ -70,7 +70,7 @@ class AuthController extends Controller
 
         if (! $employee) {
             return response()->json([
-                'message' => 'Token tidak valid',
+                'message' => 'Silahkan login terlebih dahulu',
             ], 401);
         }
 
