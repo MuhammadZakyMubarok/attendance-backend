@@ -20,30 +20,43 @@ class AuthController extends Controller
 
         try {
             $employee = Employee::query()
-            ->where('email', $validated['email'])
-            ->first();
+                ->where('email', $validated['email'])
+                ->first();
 
             if (! $employee || ! Hash::check($validated['password'], $employee->password)) {
                 return response()->json([
                     'message' => 'Email atau password salah.',
-                ]);
+                ], 401);
             }
 
-            if ($employee->tokens()->exists()) {
+            $deviceName = $validated['device_name'] ?? 'mobile';
+
+            // Jika masih ada token aktif dari device lain, jangan izinkan login
+            $hasTokenOnOtherDevice = $employee->tokens()
+                ->where('name', '!=', $deviceName)
+                ->exists();
+
+            if ($hasTokenOnOtherDevice) {
                 return response()->json([
                     'message' => 'Akun ini sudah login di perangkat lain. Silakan logout terlebih dahulu.',
                 ], 409);
             }
 
+            // Jika token lama dari device yang sama ada, overwrite dengan cara hapus token lama
+            $employee->tokens()
+                ->where('name', $deviceName)
+                ->delete();
+
             $token = $employee
-                ->createToken($validated['device_name'] ?? 'mobile')
+                ->createToken($deviceName)
                 ->plainTextToken;
 
             return response()->json([
                 'token' => $token,
                 ...$employee->toArray(),
             ], 200);
-        } catch(QueryException $e){
+
+        } catch (QueryException $e) {
             return response()->json([
                 'message' => $e->errorInfo,
             ], 500);
