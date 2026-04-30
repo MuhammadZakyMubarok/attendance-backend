@@ -53,7 +53,10 @@ class AttendanceController extends Controller
             'location_out' => 'required|string',
         ]);
         try {
-            $attendance = Attendance::where('user_id', $validated['user_id'])->where('date', $validated['date'])->first();
+            $attendance = Attendance::query()
+                ->where('user_id', '=', $validated['user_id'])
+                ->where('date', '=', $validated['date'])
+                ->first();
 
             if(!$attendance){
                 return response()->json([
@@ -82,7 +85,10 @@ class AttendanceController extends Controller
             'date' => 'required|string',
         ]);
         try{
-            $attendance = Attendance::where('user_id', $validated['user_id'])->where('date', $validated['date'])->first();
+            $attendance = Attendance::query()
+                ->where('user_id', '=', $validated['user_id'])
+                ->where('date', '=', $validated['date'])
+                ->first();
             if($attendance){
                 return response()->json([
                     'message'=> 'Anda belum melakukan absen keluar pada hari ini',
@@ -114,7 +120,9 @@ class AttendanceController extends Controller
                 ], 403);
             }
 
-            $attendance = Attendance::where('user_id', $validated['user_id'])->get();
+            $attendance = Attendance::query()
+                ->where('user_id', '=', $validated['user_id'])
+                ->get();
 
             if ($attendance->isEmpty()) {
                 return response()->json([
