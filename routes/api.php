@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/attendance/fetch-data', [AttendanceController::class, 'fetchData']);
     Route::post('/attendance/checkin', [AttendanceController::class, 'checkIn']);
     Route::post('/attendance/checkout', [AttendanceController::class, 'checkOut']);
+    Route::post('/attendance/check-attendance', [AttendanceController::class, 'checkAttendance']);
 
     Route::get('/leaving/fetch-data', [LeavingController::class, 'index']);
     Route::post('/leaving/store', [LeavingController::class, 'store']);
@@ -36,6 +37,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/employee-permit/store', [EmployeePermitController::class, 'store']);
 });
 
-Route::post('/attendance/check-attendance', [AttendanceController::class, 'checkAttendance']);
+
 
 
