@@ -25,10 +25,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/employee/fetch-data', [EmployeeController::class, 'index']);
 
-    Route::get('/attendance/fetch-data', [AttendanceController::class, 'fetchData']);
+    Route::post('/attendance/fetch-data', [AttendanceController::class, 'fetchData']);
     Route::post('/attendance/checkin', [AttendanceController::class, 'checkIn']);
     Route::post('/attendance/checkout', [AttendanceController::class, 'checkOut']);
     Route::post('/attendance/check-attendance', [AttendanceController::class, 'checkAttendance']);
+    Route::post('/attendance/today-attendance', [AttendanceController::class, 'todayAttendance']);
 
     Route::get('/leaving/fetch-data', [LeavingController::class, 'index']);
     Route::post('/leaving/store', [LeavingController::class, 'store']);

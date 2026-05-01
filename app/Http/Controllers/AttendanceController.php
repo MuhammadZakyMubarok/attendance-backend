@@ -130,14 +130,14 @@ class AttendanceController extends Controller
 
             if (!$attendance) {
                 return response()->json([
-                    'status'  => 'not_checked_in',
+                    'status'  => 'notCheckedIn',
                     'message' => 'Anda belum melakukan absen masuk pada hari ini',
                 ], 200);
             }
 
             if ($attendance->time_out === null) {
                 return response()->json([
-                    'status'  => 'checked_in_not_checked_out',
+                    'status'  => 'checkedIn',
                     'message' => 'Anda belum melakukan absen keluar pada hari ini',
                 ], 200);
             }
@@ -164,7 +164,6 @@ class AttendanceController extends Controller
 
             $attendance = Attendance::query()
                 ->where('user_id', '=', $authUser->id)
-                ->orderBy('date', 'desc')
                 ->get();
 
             return response()->json([
@@ -178,12 +177,32 @@ class AttendanceController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function todayAttendance(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'date' => 'required|date_format:Y-m-d',
+        ]);
+
+        try {
+            $authUser =  $request->user();
+
+            $attendance = Attendance::query()
+                ->where('user_id', '=', $authUser->id)
+                ->where('date', '=', $validated['date'])
+                ->first();
+            
+            if ($attendance) {
+                return response()->json($attendance, 200);
+            } else{
+                return response()->json([
+                    'message' => 'Tidak berhasil menemukan data Attendance hari ini',
+                ], 404);
+            }
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => $e->errorInfo,
+            ], 500);
+        }
     }
 
     /**
