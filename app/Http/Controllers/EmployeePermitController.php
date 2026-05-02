@@ -38,4 +38,20 @@ class EmployeePermitController extends Controller
             ], 500);
         }
     }
+
+    public function fetchData(Request $request){
+        try {
+            $user = $request->user();
+
+            $employeePermit = EmployeePermit::query()->where('user_id', '=', $user->id)->get();
+
+            if($employeePermit){
+                return response()->json($employeePermit,200);
+            }
+        } catch(QueryException $e){
+            return response()->json([
+                'message' => $e->errorInfo
+            ], 500);
+        }
+    }
 }

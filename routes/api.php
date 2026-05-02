@@ -31,10 +31,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/attendance/check-attendance', [AttendanceController::class, 'checkAttendance']);
     Route::post('/attendance/today-attendance', [AttendanceController::class, 'todayAttendance']);
 
-    Route::get('/leaving/fetch-data', [LeavingController::class, 'index']);
+    Route::get('/leaving/fetch-data', [LeavingController::class, 'fetchData']);
     Route::post('/leaving/store', [LeavingController::class, 'store']);
 
-    Route::get('/employee-permit/fetch-data', [EmployeePermitController::class, 'index']);
+    Route::get('/employee-permit/fetch-data', [EmployeePermitController::class, 'fetchData']);
     Route::post('/employee-permit/store', [EmployeePermitController::class, 'store']);
 });
 

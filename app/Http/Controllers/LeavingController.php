@@ -56,9 +56,19 @@ class LeavingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function fetchData(Request $request)
     {
-        //
+        try {
+            $user = $request->user();
+
+            $leaving = Leaving::query()->where('user_id', '=', $user->id)->get();
+
+            return response()->json($leaving, 200);
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => $e->errorInfo
+            ], 500);
+        }
     }
 
     /**
