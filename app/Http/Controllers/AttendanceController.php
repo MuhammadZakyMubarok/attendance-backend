@@ -166,9 +166,7 @@ class AttendanceController extends Controller
                 ->where('user_id', '=', $authUser->id)
                 ->get();
 
-            return response()->json([
-                'data' => $attendance,
-            ], 200);
+            return response()->json($attendance, 200);
 
         } catch (QueryException $e) {
             return response()->json([
