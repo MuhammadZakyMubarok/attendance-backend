@@ -35,13 +35,23 @@ class LeavingController extends Controller
             'dt_leave' => 'required|string',
             'dt_mulai' => 'required|string',
             'dt_selesai' => 'required|string',
-            'unique_id' => 'required|string',
             'long_period' => 'integer',
             'sisa' => 'integer',
-            'user_id' => 'required|integer'
         ]);
+        
         try{
-            Leaving::create($validated);
+            $user = $request->user();
+            // ini jika satu satu
+            // $validated['user_id'] = $user->id;
+            // $validated['unique_id'] = $user->unique_id;
+
+            // ini jika digabungkan
+            $data = array_merge($validated, [
+                'user_id'   => $user->id,
+                'unique_id' => $user->unique_id,
+            ]);
+            
+            Leaving::create($data);
 
             return response()->json([
                 'message' => 'Berhasil submit form Leaving'

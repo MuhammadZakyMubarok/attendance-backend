@@ -25,7 +25,6 @@ class AttendanceController extends Controller
     public function checkIn(Request $request)
     {
         $validated = $request->validate([
-            'unique_id'   => 'required|string',
             'date'        => 'required|date_format:Y-m-d',
             'time_in'     => 'required|string',
             'location_in' => 'required|string',
@@ -47,7 +46,7 @@ class AttendanceController extends Controller
 
             Attendance::create([
                 'user_id'     => $authUser->id,
-                'unique_id'   => $validated['unique_id'],
+                'unique_id'   => $authUser->unique_id,
                 'date'        => $validated['date'],
                 'time_in'     => $validated['time_in'],
                 'location_in' => $validated['location_in'],

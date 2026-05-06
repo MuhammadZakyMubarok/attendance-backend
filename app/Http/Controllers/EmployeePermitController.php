@@ -24,11 +24,16 @@ class EmployeePermitController extends Controller
             'jam_selesai' => 'string',
             'long_period' => 'integer',
             'permit_statement' => 'string',
-            'user_id' => 'required|integer',
-            'unique_id' => 'required|string',
         ]);
         try{
-            EmployeePermit::create($validated);
+            $user = $request->user();
+
+            $data = array_merge($validated, [
+                'user_id' => $user->id,
+                'unique_id' => $user->unique_id,
+            ]);
+
+            EmployeePermit::create($data);
             return response()->json([
                 'message' => 'Berhasil submit form Employee Permit'
             ], 200);
