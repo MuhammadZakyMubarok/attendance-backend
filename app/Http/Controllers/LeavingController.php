@@ -87,11 +87,11 @@ class LeavingController extends Controller
             $user = $request->user();
 
             $sisa = Leaving::query()->where('user_id', '=', $user->id)
-                ->orderByDesc('id')
+                ->orderByDesc($user->id)
                 ->value('sisa');
 
             return response()->json([
-                'sisa' => $sisa
+                'sisa' => $sisa ?? null
             ], 200);
 
         } catch (QueryException $e) {
