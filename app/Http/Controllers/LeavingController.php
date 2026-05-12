@@ -81,18 +81,30 @@ class LeavingController extends Controller
         }
     }
 
+    public function getRemainingLeaveBalance(Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            $sisa = Leaving::query()->where('user_id', '=', $user->id)
+                ->orderByDesc('id')
+                ->value('sisa');
+
+            return response()->json([
+                'sisa' => $sisa
+            ], 200);
+
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => $e->errorInfo
+            ], 500);
+        }
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
     {
         //
     }

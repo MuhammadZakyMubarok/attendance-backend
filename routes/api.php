@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/leaving/fetch-data', [LeavingController::class, 'fetchData']);
     Route::post('/leaving/store', [LeavingController::class, 'store']);
+    Route::post('/leaving/remaining-leave-balance', [LeavingController::class, 'getRemainingLeaveBalance']);
 
     Route::post('/employee-permit/fetch-data', [EmployeePermitController::class, 'fetchData']);
     Route::post('/employee-permit/store', [EmployeePermitController::class, 'store']);
