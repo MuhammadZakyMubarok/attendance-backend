@@ -18,6 +18,7 @@ class EmployeePermit extends Model
         'jam_selesai',
         'long_period',
         'permit_statement',
+        'formNumber',
         'user_id',
         'unique_id',
     ];

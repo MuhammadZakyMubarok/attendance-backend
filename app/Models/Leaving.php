@@ -16,6 +16,7 @@ class Leaving extends Model
         'unique_id',
         'long_period',
         'sisa',
+        'formNumber',
         'user_id'
     ];
 }

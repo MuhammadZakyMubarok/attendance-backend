@@ -59,4 +59,24 @@ class EmployeePermitController extends Controller
             ], 500);
         }
     }
+
+    public function getFormNumber(Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            $formNumber = EmployeePermit::query()->where('user_id', '=', $user->id)
+                    ->orderByDesc($user->id)
+                    ->value('formNumber');
+
+            return response()->json([
+                'formNumber' => $formNumber ?? null
+            ], 200);
+
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => $e->errorInfo
+            ], 500);
+        }
+    }
 }
