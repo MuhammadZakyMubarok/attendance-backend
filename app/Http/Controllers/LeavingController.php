@@ -87,7 +87,7 @@ class LeavingController extends Controller
             $user = $request->user();
 
             $sisa = Leaving::query()->where('user_id', '=', $user->id)
-                ->orderByDesc($user->id)
+                ->orderByDesc('id')
                 ->value('sisa');
 
             return response()->json([
