@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use Illuminate\Database\QueryException;
+use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
@@ -195,6 +196,32 @@ class AttendanceController extends Controller
                     'message' => 'Tidak berhasil menemukan data Attendance hari ini',
                 ], 404);
             }
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => $e->errorInfo,
+            ], 500);
+        }
+    }
+
+    public function fetchWeeklyData(Request $request)
+    {
+        try {
+            $authUser = $request->user();
+            
+            $startOfWeek = Carbon::now()->startOfWeek()->format('Y-m-d');
+            $endOfWeek = Carbon::now()->endOfWeek()->format('Y-m-d');
+
+            $attendance = Attendance::query()
+                ->where('user_id', '=', $authUser->id)
+                ->whereBetween('date', [$startOfWeek, $endOfWeek])
+                ->get();
+
+            return response()->json([
+                'date' => $attendance->date,
+                'timeIn' => $attendance->time_in,
+                'timeOut' => $attendance->time_out,
+            ], 200);
+
         } catch (QueryException $e) {
             return response()->json([
                 'message' => $e->errorInfo,
