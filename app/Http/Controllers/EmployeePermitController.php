@@ -66,7 +66,7 @@ class EmployeePermitController extends Controller
             $user = $request->user();
 
             $formNumber = EmployeePermit::query()->where('user_id', '=', $user->id)
-                    ->orderByDesc($user->id)
+                    ->orderByDesc('id')
                     ->value('formNumber');
 
             return response()->json([

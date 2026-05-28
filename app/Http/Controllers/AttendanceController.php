@@ -216,12 +216,15 @@ class AttendanceController extends Controller
                 ->whereBetween('date', [$startOfWeek, $endOfWeek])
                 ->get();
 
-            return response()->json([
-                'date' => $attendance->date,
-                'timeIn' => $attendance->time_in,
-                'timeOut' => $attendance->time_out,
-            ], 200);
+            $formattedData = $attendance->map(function ($item) {
+                return [
+                    'date'    => $item->date,
+                    'timeIn'  => $item->time_in,
+                    'timeOut' => $item->time_out,
+                ];
+            });
 
+            return response()->json($formattedData, 200);
         } catch (QueryException $e) {
             return response()->json([
                 'message' => $e->errorInfo,
