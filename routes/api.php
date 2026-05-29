@@ -7,6 +7,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\LeavingController;
 use App\Http\Controllers\EmployeePermitController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RequestController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -40,6 +41,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/employee-permit/fetch-data', [EmployeePermitController::class, 'fetchData']);
     Route::post('/employee-permit/store', [EmployeePermitController::class, 'store']);
     Route::post('/employee-permit/form-number', [LeavingController::class, 'getFormNumber']);
+
+    Route::post('request/data', [RequestController::class, 'fetchRequestData']);
 });
 
 
