@@ -74,7 +74,6 @@ class LeavingController extends Controller
             'dt_selesai' => 'string',
             'long_period' => 'integer',
             'sisa' => 'integer',
-            'latestDataLeaveBalance' => 'nullable|integer'
         ]);
         
         try{
@@ -93,12 +92,13 @@ class LeavingController extends Controller
                 ], 404);
             }
 
-            if($validated['latestDataLeaveBalance']){
+            if($request->latestDataLeaveBalance){
                 Leaving::query()
                     ->where('user_id', $user->id)
                     ->orderByDesc('id')
-                    ->update([
-                        'sisa' => $validated['sisa']
+                    ->first()
+                    ?->update([ // tanda ? sebagai null safe operator
+                        'sisa' => $request->latestDataLeaveBalance
                     ]);
             }
 
