@@ -35,6 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/leaving/store', [LeavingController::class, 'store']);
     Route::post('/leaving/update', [LeavingController::class, 'update']);
+    Route::post('/leaving/update-latest-data', [LeavingController::class, 'updateLatestData']);
     Route::post('/leaving/remaining-leave-balance', [LeavingController::class, 'getRemainingLeaveBalance']);
     Route::post('/leaving/form-number', [LeavingController::class, 'getFormNumber']);
 
