@@ -37,6 +37,7 @@ class LeavingController extends Controller
             'dt_selesai' => 'required|string',
             'long_period' => 'integer',
             'sisa' => 'integer',
+            'formNumber' => 'required|integer'
         ]);
         
         try{

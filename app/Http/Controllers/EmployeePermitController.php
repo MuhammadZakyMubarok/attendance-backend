@@ -28,6 +28,7 @@ class EmployeePermitController extends Controller
             'purpose' => 'nullable|string',
             'long_period' => 'nullable|string',
             'permit_statement' => 'nullable|string',
+            'formNumber' => 'required|integer'
         ]);
 
         try{
@@ -52,7 +53,7 @@ class EmployeePermitController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'id'               => 'required|integer',
+            'id' => 'required|integer',
             // Jika jam_mulai kosong, dt_mulai wajib diisi teks. Jika jam_mulai ada, dt_mulai boleh null.
             'dt_mulai' => 'required_without:jam_mulai|nullable|string',
             'dt_selesai' => 'required_without:jam_selesai|nullable|string',
