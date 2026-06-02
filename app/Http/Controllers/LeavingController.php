@@ -97,7 +97,9 @@ class LeavingController extends Controller
                 Leaving::query()
                     ->where('user_id', $user->id)
                     ->orderByDesc('id')
-                    ->update($validated);
+                    ->update([
+                        'sisa' => $validated['sisa']
+                    ]);
             }
 
             return response()->json([
