@@ -22,7 +22,7 @@ class EmployeePermitController extends Controller
             'dt_selesai' => 'string',
             'jam_mulai' => 'string',
             'jam_selesai' => 'string',
-            'long_period' => 'integer',
+            'long_period' => 'string',
             'permit_statement' => 'string',
         ]);
         try{
@@ -49,14 +49,14 @@ class EmployeePermitController extends Controller
         $validated = $request->validate([
             'id'               => 'required|integer',
             'dt_permit'        => 'required|string',
-            'needs'            => 'nullable|string',
-            'purpose'          => 'nullable|string',
+            'needs'            => 'string',
+            'purpose'          => 'string',
             'dt_mulai'         => 'nullable|string',
             'dt_selesai'       => 'nullable|string',
             'jam_mulai'        => 'nullable|string',
             'jam_selesai'      => 'nullable|string',
-            'long_period'      => 'nullable|integer',
-            'permit_statement' => 'nullable|string',
+            'long_period'      => 'string',
+            'permit_statement' => 'string',
         ]);
 
         try {

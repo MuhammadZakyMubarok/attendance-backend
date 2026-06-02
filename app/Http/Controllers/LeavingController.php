@@ -67,10 +67,10 @@ class LeavingController extends Controller
     {
         $validated = $request->validate([
             'id' => 'required|integer',
-            'leave' => 'required|string',
-            'dt_leave' => 'required|string',
-            'dt_mulai' => 'required|string',
-            'dt_selesai' => 'required|string',
+            'leave' => 'string',
+            'dt_leave' => 'string',
+            'dt_mulai' => 'string',
+            'dt_selesai' => 'string',
             'long_period' => 'integer',
             'sisa' => 'integer',
         ]);
