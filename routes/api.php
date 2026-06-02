@@ -41,7 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/employee-permit/store', [EmployeePermitController::class, 'store']);
     Route::post('/employee-permit/update', [EmployeePermitController::class, 'update']);
-    Route::post('/employee-permit/form-number', [LeavingController::class, 'getFormNumber']);
+    Route::post('/employee-permit/form-number', [EmployeePermitController::class, 'getFormNumber']);
 
     Route::post('request/data', [RequestController::class, 'fetchRequestData']);
 });
