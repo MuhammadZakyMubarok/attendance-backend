@@ -63,22 +63,43 @@ class LeavingController extends Controller
         };
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function fetchData(Request $request)
+    public function update(Request $request)
     {
-        try {
+        $validated = $request->validate([
+            'id' => 'required|integer',
+            'leave' => 'required|string',
+            'dt_leave' => 'required|string',
+            'dt_mulai' => 'required|string',
+            'dt_selesai' => 'required|string',
+            'long_period' => 'integer',
+            'sisa' => 'integer',
+        ]);
+        
+        try{
             $user = $request->user();
 
-            $leaving = Leaving::query()->where('user_id', '=', $user->id)->get();
+            $leavingId = $validated['id'];
+            unset($validated['id']);
+            
+            $updated = Leaving::query()->where('id',$leavingId)
+                ->where('user_id', $user->id)
+                ->update($validated);
 
-            return response()->json($leaving, 200);
-        } catch (QueryException $e) {
+            if(!$updated){
+                return response()->json([
+                    'message' => 'Data permit tidak ditemukan atau Anda tidak memiliki akses.'
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Berhasil mengubah data'
+            ], 200);
+
+        } catch(QueryException $e){
             return response()->json([
                 'message' => $e->errorInfo
             ], 500);
-        }
+        };
     }
 
     public function getRemainingLeaveBalance(Request $request)

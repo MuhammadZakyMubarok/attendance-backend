@@ -33,13 +33,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/attendance/today-attendance', [AttendanceController::class, 'todayAttendance']);
     Route::post('/attendance/fetch-weekly-data', [AttendanceController::class, 'fetchWeeklyData']);
 
-    Route::post('/leaving/fetch-data', [LeavingController::class, 'fetchData']);
     Route::post('/leaving/store', [LeavingController::class, 'store']);
+    Route::post('/leaving/update', [LeavingController::class, 'update']);
     Route::post('/leaving/remaining-leave-balance', [LeavingController::class, 'getRemainingLeaveBalance']);
     Route::post('/leaving/form-number', [LeavingController::class, 'getFormNumber']);
 
-    Route::post('/employee-permit/fetch-data', [EmployeePermitController::class, 'fetchData']);
     Route::post('/employee-permit/store', [EmployeePermitController::class, 'store']);
+    Route::post('/employee-permit/update', [EmployeePermitController::class, 'update']);
     Route::post('/employee-permit/form-number', [LeavingController::class, 'getFormNumber']);
 
     Route::post('request/data', [RequestController::class, 'fetchRequestData']);

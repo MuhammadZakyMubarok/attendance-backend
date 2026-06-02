@@ -44,16 +44,43 @@ class EmployeePermitController extends Controller
         }
     }
 
-    public function fetchData(Request $request){
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'id'               => 'required|integer',
+            'dt_permit'        => 'required|string',
+            'needs'            => 'nullable|string',
+            'purpose'          => 'nullable|string',
+            'dt_mulai'         => 'nullable|string',
+            'dt_selesai'       => 'nullable|string',
+            'jam_mulai'        => 'nullable|string',
+            'jam_selesai'      => 'nullable|string',
+            'long_period'      => 'nullable|integer',
+            'permit_statement' => 'nullable|string',
+        ]);
+
         try {
             $user = $request->user();
 
-            $employeePermit = EmployeePermit::query()->where('user_id', '=', $user->id)->get();
+            $permitId = $validated['id'];
+            unset($validated['id']); 
 
-            if($employeePermit){
-                return response()->json($employeePermit,200);
+            $updated = EmployeePermit::query()
+                ->where('id', $permitId)
+                ->where('user_id', $user->id)
+                ->update($validated);
+
+            if (!$updated) {
+                return response()->json([
+                    'message' => 'Data permit tidak ditemukan atau Anda tidak memiliki akses.'
+                ], 404);
             }
-        } catch(QueryException $e){
+
+            return response()->json([
+                'message' => 'Berhasil mengubah data'
+            ], 200);
+
+        } catch(QueryException $e) {
             return response()->json([
                 'message' => $e->errorInfo
             ], 500);
