@@ -74,6 +74,7 @@ class LeavingController extends Controller
             'dt_selesai' => 'string',
             'long_period' => 'integer',
             'sisa' => 'integer',
+            'latestDataLeaveBalance' => 'nullable|integer'
         ]);
         
         try{
@@ -92,38 +93,11 @@ class LeavingController extends Controller
                 ], 404);
             }
 
-            return response()->json([
-                'message' => 'Berhasil mengubah data'
-            ], 200);
-
-        } catch(QueryException $e){
-            return response()->json([
-                'message' => $e->errorInfo
-            ], 500);
-        };
-    }
-
-    public function updateLatestData(Request $request)
-    {
-        $validated = $request->validate([
-            'sisa' => 'required|integer',
-        ]);
-        
-        try{
-            $user = $request->user();
-
-            $leavingId = $validated['id'];
-            unset($validated['id']);
-            
-            $updated = Leaving::query()
-                ->where('user_id', $user->id)
-                ->orderByDesc('id')
-                ->update($validated);
-
-            if(!$updated){
-                return response()->json([
-                    'message' => 'Data permit tidak ditemukan atau Anda tidak memiliki akses.'
-                ], 404);
+            if($validated['latestDataLeaveBalance']){
+                Leaving::query()
+                    ->where('user_id', $user->id)
+                    ->orderByDesc('id')
+                    ->update($validated);
             }
 
             return response()->json([
