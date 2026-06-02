@@ -8,23 +8,28 @@ use Illuminate\Database\QueryException;
 
 class EmployeePermitController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $employeePermit = EmployeePermit::all();
         return response()->json($employeePermit, 200);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $validated = $request->validate([
             'dt_permit' => 'required|string',
-            'needs' => 'string',
-            'purpose' => 'string',
-            'dt_mulai' => 'nullable|string',
-            'dt_selesai' => 'nullable|string',
-            'jam_mulai' => 'nullable|string',
-            'jam_selesai' => 'nullable|string',
-            'long_period' => 'string',
-            'permit_statement' => 'string',
+            // Jika jam_mulai kosong, dt_mulai wajib diisi teks. Jika jam_mulai ada, dt_mulai boleh null.
+            'dt_mulai' => 'required_without:jam_mulai|nullable|string',
+            'dt_selesai' => 'required_without:jam_selesai|nullable|string',
+            // Sebaliknya, jika dt_mulai kosong, jam_mulai wajib diisi teks.
+            'jam_mulai' => 'required_without:dt_mulai|nullable|string',
+            'jam_selesai' => 'required_without:dt_selesai|nullable|string',
+            'needs' => 'nullable|string',
+            'purpose' => 'nullable|string',
+            'long_period' => 'nullable|string',
+            'permit_statement' => 'nullable|string',
         ]);
+
         try{
             $user = $request->user();
 
