@@ -31,13 +31,11 @@ class RequestController extends Controller
         }
     }
 
-    public function fetchAllRequestData(Request $request){
+    public function fetchAllRequestData(){
         try {
-            $user = $request->user();
-
-            $attendance = Attendance::query()->where('user_id', '=', $user->id)->get();
-            $leaving = Leaving::query()->where('user_id', '=', $user->id)->get();
-            $employeePermit = EmployeePermit::query()->where('user_id', '=', $user->id)->get();
+            $attendance = Attendance::query()->get();
+            $leaving = Leaving::query()->get();
+            $employeePermit = EmployeePermit::query()->get();
 
             return response()->json([
                 'attendance' => $attendance,
