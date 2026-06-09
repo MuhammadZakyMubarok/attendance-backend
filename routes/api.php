@@ -8,6 +8,7 @@ use App\Http\Controllers\LeavingController;
 use App\Http\Controllers\EmployeePermitController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\HrdAttendanceController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -43,7 +44,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/employee-permit/update', [EmployeePermitController::class, 'update']);
     Route::post('/employee-permit/form-number', [EmployeePermitController::class, 'getFormNumber']);
 
-    Route::post('request/data', [RequestController::class, 'fetchRequestData']);
+    Route::post('/hrd-attendance/fetch-data', [HrdAttendanceController::class, 'fetchData']);
+    Route::post('/hrd-attendance/checkin', [HrdAttendanceController::class, 'checkIn']);
+    Route::post('/hrd-attendance/checkout', [HrdAttendanceController::class, 'checkOut']);
+    Route::post('/hrd-attendance/check-attendance', [HrdAttendanceController::class, 'checkAttendance']);
+    Route::post('/hrd-attendance/today-attendance', [HrdAttendanceController::class, 'todayAttendance']);
+
+    Route::post('request/data', [RequestController::class, 'fetchEmployeeRequestData']);
+    Route::post('request/all-data', [RequestController::class, 'fetchAllRequestData']);
 });
 
 
