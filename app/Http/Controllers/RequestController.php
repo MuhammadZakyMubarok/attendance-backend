@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\Leaving;
 use App\Models\EmployeePermit;
+use App\Models\Employee;
 use Illuminate\Database\QueryException;
 
 
@@ -43,6 +44,23 @@ class RequestController extends Controller
                 'employeePermit' => $employeePermit
             ], 200);
 
+        } catch(QueryException $e) {
+            return response()->json([
+                'message' => $e->errorInfo
+            ], 500);
+        }
+    }
+
+    public function fetchUniqueId()
+    {
+        try {
+            $staffUniqueId = Employee::query()->where('role', 'staff')->pluck('unique_id');
+            $hrdUniqueId = Employee::query()->where('role', 'hrd')->pluck('unique_id');
+
+            return response()->json([
+                'staffUniqueId' => $staffUniqueId,
+                'hrdUniqueId' => $hrdUniqueId
+            ],200);
         } catch(QueryException $e) {
             return response()->json([
                 'message' => $e->errorInfo

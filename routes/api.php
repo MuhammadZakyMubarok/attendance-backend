@@ -54,6 +54,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('request/all-data', [RequestController::class, 'fetchAllRequestData']);
 });
 
+Route::get('request/unique-id', [RequestController::class, 'fetchUniqueId']);
+
 
 
 
