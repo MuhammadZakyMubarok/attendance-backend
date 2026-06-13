@@ -52,7 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('request/data', [RequestController::class, 'fetchEmployeeRequestData']);
     Route::post('request/all-data', [RequestController::class, 'fetchAllRequestData']);
-    Route::get('request/unique-id', [RequestController::class, 'fetchUniqueId']);
+    Route::post('request/unique-id', [RequestController::class, 'fetchUniqueId']);
 });
 
 
