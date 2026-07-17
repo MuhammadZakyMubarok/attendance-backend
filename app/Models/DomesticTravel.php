@@ -8,7 +8,13 @@ class DomesticTravel extends Model
 {
     protected $table = 'hrd.travel';
     protected $fillable = [
-        'dt_leave',
-        'dt_arrive',
+        'approved_by',
+        'remark',
+        'applicant_id',
+        'start_date',
+        'end_date',
+        'date_approved',
+        'ins_date',
+        'pm_id',
     ];
 }
